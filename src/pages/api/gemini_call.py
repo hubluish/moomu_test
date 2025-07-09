@@ -31,8 +31,7 @@ prompt = f"""
 Pastel, Vintage, Retro, Neon, Gold, Light, Dark, Warm, Cold, Summer, Fall, Winter, Spring, Happy, Nature, Earth, Night, Space, Rainbow, Gradient, Sunset, Sky, Sea, Kids, Skin, Food, Cream, Coffee, Wedding, Christmas, Halloween, Blue, Teal, Mint, Green, Sage, Yellow, Beige, Brown, Orange, Peach, Red, Maroon, Pink, Purple, Navy, Black, Grey, White
 
 이미지 관련  
-- 이미지 키워드 (반드시 아래 리스트 중 하나만 선택)
-    감각적인, 감성, 감정, 도시, 미니멀, 밤, 빈티지, 아침, 여행, 음식, 인물, 자연, 풍경, 하늘
+- 이미지 키워드 (입력 키워드를 구체화한 문장 1줄)
 
 폰트 관련  
 - 폰트 키워드 (제공 리스트 중 입력 키워드와 유사한 단어 1개 선택)

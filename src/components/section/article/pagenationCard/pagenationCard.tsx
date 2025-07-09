@@ -5,13 +5,6 @@ import Pagenation from "../../../common/pagenation";
 import styles from "./pagenation.module.css";
 import Image from "next/image";
 
-// 여기에 사용할 ObjectId들을 배열로 입력하세요!
-const ids = [
-  1,
-  2,
-  3,
-  4,
-];
 
 const SLUGS = [
   "652b6248eee1811bd0e7bf6ee800408240d2213b5d62de0b94b4a7477ab004c8",

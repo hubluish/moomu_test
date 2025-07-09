@@ -8,6 +8,7 @@ import gsap from "gsap";
 
 interface CardData {
   imageUrl: string;
+  slug: string;
   title: string;
   description: string;
   category: string;

@@ -3,7 +3,6 @@ import styles from "./ArticleList.module.css";
 import "@/styles/variable.css";
 import Image from "next/image";
 import { toSlug } from '@/utils/slug';
-import { supabase } from '@/utils/supabase';
 
 const CATEGORY_OPTIONS = ["UI", "카드뉴스", "포스터", "용어사전", "트렌드"];
 

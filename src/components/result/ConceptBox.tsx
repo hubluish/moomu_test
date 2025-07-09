@@ -3,15 +3,32 @@
 
 import React from 'react';
 
-export default function ConceptBox() {
+interface ConceptBoxProps {
+    moodSentences: string[];
+}
+
+export default function ConceptBox({ moodSentences }: ConceptBoxProps) {
+    // moodSentences가 undefined/null이면 빈 배열로 대체
+    const safeMoodSentences = Array.isArray(moodSentences) ? moodSentences : [];
+
+    // 3개씩 묶기
+    const grouped = [];
+    for (let i = 0; i < safeMoodSentences.length; i += 3) {
+        grouped.push(safeMoodSentences.slice(i, i + 3));
+    }
+
     return (
         <div style={styles.container}>
-        <div style={styles.title}>Concepts</div>
-        <div style={styles.content}>
-            <p style={styles.text}>- 불필요한 장식을 덜어내 감정에 집중할 여백을 제공</p>
-            <p style={styles.text}>- 미니멀한 요소로 환상적인 분위기 속에서 시선을 정돈하는 균형감 제공</p>
-            <p style={styles.text}>- 미니멀하고 깨끗한 구조 위에 핸드드로잉과 파스텔이 조화를 이룸</p>
-        </div>
+            <div style={styles.title}>Concepts</div>
+            <div style={styles.content}>
+                {grouped.map((group, idx) => (
+                    <div key={idx} style={{ marginBottom: 16 }}>
+                        {group.map((sentence, i) => (
+                            <p key={i} style={styles.text}>- {sentence}</p>
+                        ))}
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }

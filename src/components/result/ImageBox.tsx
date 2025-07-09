@@ -1,89 +1,65 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './ImageBox.module.css';
 
-interface PinterestImage {
+interface PinterestItem {
     thumbnail_url: string;
     pin_url: string;
-}
+    }
 
-const ImageBox: React.FC = () => {
-    const [images, setImages] = useState<PinterestImage[]>([]);
-    const [loading, setLoading] = useState(true);
+    export default function ImageBox() {
+    const [page, setPage] = useState(0);
+    const [data, setData] = useState<PinterestItem[]>([]);
+    const itemsPerPage = 6;
 
     useEffect(() => {
-        const loadImages = async () => {
-            try {
-                // localStorage에서 이미지 키워드 가져오기
-                const imageKeywordsStr = localStorage.getItem('image_keywords');
-                if (!imageKeywordsStr) {
-                    throw new Error('이미지 키워드를 찾을 수 없습니다.');
-                }
-
-                const imageKeywords = JSON.parse(imageKeywordsStr) as string[];
-                console.log('로드된 이미지 키워드:', imageKeywords);
-
-                // 각 키워드에 대해 이미지 가져오기
-                const allImages: PinterestImage[] = [];
-                for (const keyword of imageKeywords) {
-                    const response = await fetch(`/data/pinterest_images/${keyword}.json`);
-                    if (!response.ok) {
-                        console.error(`${keyword} 이미지 로딩 실패`);
-                        continue;
-                    }
-                    
-                    const imageData = await response.json();
-                    // 각 키워드당 상위 2개 이미지만 사용
-                    allImages.push(...imageData.slice(0, 2));
-                }
-
-                setImages(allImages);
-            } catch (error) {
-                console.error('이미지 로딩 에러:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        loadImages();
+        fetch('/data/pinterest_images.json')
+        .then(res => res.json())
+        .then(setData)
+        .catch(err => console.error('Failed to load JSON:', err));
     }, []);
 
-    if (loading) {
-        return <div className={styles.loading}>이미지 로딩 중...</div>;
-    }
+    const handlePrev = () => {
+        if (page > 0) setPage(page - 1);
+    };
 
-    if (images.length === 0) {
-        return <div className={styles.noImages}>이미지를 찾을 수 없습니다.</div>;
-    }
+    const handleNext = () => {
+        if ((page + 1) * itemsPerPage < data.length) {
+        setPage(page + 1);
+        }
+    };
+
+    const displayedItems = data.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
 
     return (
-        <div className={styles.imageBox}>
-            <h2 className={styles.title}>Pinterest 이미지</h2>
-            <div className={styles.imageGrid}>
-                {images.map((image, index) => (
-                    <a 
-                        key={index} 
-                        href={image.pin_url} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className={styles.imageWrapper}
-                    >
-                        {image.thumbnail_url?.trim() ? (
-                            <img 
-                                src={image.thumbnail_url} 
-                                alt="pinterest thumbnail" 
-                                className={styles.image}
-                                loading="lazy"
-                            />
-                        ) : (
-                            <div className={styles.placeholder} />
-                        )}
-                    </a>
-                ))}
+        <div className={styles.container}>
+        <div className={styles.label}>Image Style</div>
+        <div className={styles.gridWrapper}>
+            <button className={styles.navButton + ' ' + styles.left} onClick={handlePrev}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="26" viewBox="0 0 13 26" fill="none">
+                <path opacity="0.25" d="M0 13L11.25 26L13 23.8333L3.75 13L13 2.16667L11.25 0L0 13Z" fill="black"/>
+            </svg>
+            </button>
+
+            <div className={styles.grid}>
+            {displayedItems.map((item, idx) => (
+                <a key={idx} href={item.pin_url} target="_blank" rel="noopener noreferrer" className={styles.imageWrapper}>
+                {item.thumbnail_url?.trim() ? (
+                <img src={item.thumbnail_url} alt="pinterest thumbnail" className={styles.image} />
+                ) : (
+                <div className={styles.placeholder} />
+                )}
+                </a>
+            ))}
             </div>
+
+            <button className={styles.navButton + ' ' + styles.right} onClick={handleNext}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="26" viewBox="0 0 13 26" fill="none">
+                <path opacity="0.25" d="M1.75 0L0 2.16667L9.25 13L0 23.8333L1.75 26L13 13L1.75 0Z" fill="black"/>
+            </svg>
+            </button>
+        </div>
         </div>
     );
-};
-
-export default ImageBox;
+}
